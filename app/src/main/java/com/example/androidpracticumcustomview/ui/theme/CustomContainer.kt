@@ -1,5 +1,6 @@
 package com.example.androidpracticumcustomview.ui.theme
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -58,6 +59,7 @@ class CustomContainer @JvmOverloads constructor(
 
         val parentWidth = right - left
         val parentHeight = bottom - top
+        val parentCenterY = parentHeight / 2f
 
         // First child
         if (childCount >= 1) {
@@ -69,12 +71,12 @@ class CustomContainer @JvmOverloads constructor(
                 val left = paddingLeft + (parentWidth - paddingLeft - paddingRight - childWidth) / 2
                 val top = paddingLeft
 
-                firstChild.layout(
-                    left,
-                    top,
-                    left + childWidth,
-                    top + childHeight
-                )
+                firstChild.layout(left, top, left + childWidth, top + childHeight)
+
+                if (firstChild.tag != TAG_VALUE) {
+                    firstChild.animateChildFromCenter(parentCenterY)
+                    firstChild.tag = TAG_VALUE
+                }
             }
         }
 
@@ -88,12 +90,12 @@ class CustomContainer @JvmOverloads constructor(
                 val left = paddingLeft + (parentWidth - paddingLeft - paddingRight - childWidth) / 2
                 val top = parentHeight - paddingBottom - childHeight
 
-                secondChild.layout(
-                    left,
-                    top,
-                    left + childWidth,
-                    top + childHeight
-                )
+                secondChild.layout(left, top, left + childWidth, top + childHeight)
+
+                if (secondChild.tag != TAG_VALUE) {
+                    secondChild.animateChildFromCenter(parentCenterY)
+                    secondChild.tag = TAG_VALUE
+                }
             }
         }
     }
@@ -114,10 +116,26 @@ class CustomContainer @JvmOverloads constructor(
         if (childCount >= 2) {
             throw IllegalStateException(EXCEPTION_MESSAGE)
         }
+        child.tag = null
         super.addView(child)
     }
 
+    private fun View.animateChildFromCenter(startY: Float) {
+        translationY = startY - height / 2f - top
+        alpha = 0f
+
+        val animY = ObjectAnimator.ofFloat(this, "translationY", 0f)
+            .apply { duration = TRANSLATION_ANIM_DURATION_MILLIS }
+        val animAlpha = ObjectAnimator.ofFloat(this, "alpha", 1f)
+            .apply { duration = ALPHA_ANIM_DURATION_MILLIS }
+        animY.start()
+        animAlpha.start()
+    }
+
     private companion object {
+        const val ALPHA_ANIM_DURATION_MILLIS = 2000L
+        const val TRANSLATION_ANIM_DURATION_MILLIS = 5000L
         const val EXCEPTION_MESSAGE = "CustomContainer can only contain two child elements!"
+        const val TAG_VALUE = "animated"
     }
 }

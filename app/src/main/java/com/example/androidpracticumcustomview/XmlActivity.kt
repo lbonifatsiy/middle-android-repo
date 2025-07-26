@@ -29,19 +29,17 @@ class XmlActivity : ComponentActivity() {
             finish()
         }
 
-        val firstView = getOkTextView()
-        val secondView = getOkTextView()
+        val firstView = TextView(this).apply {
+            text = 1.toString()
+        }
+        val secondView = TextView(this).apply {
+            text = 2.toString()
+        }
 
         customContainer.addView(firstView)
 
         Handler(Looper.getMainLooper()).postDelayed({
             customContainer.addView(secondView)
         }, 2000)
-    }
-
-    private fun getOkTextView(): TextView {
-        return TextView(this).apply {
-            text = getString(android.R.string.ok)
-        }
     }
 }
