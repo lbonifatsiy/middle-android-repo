@@ -35,6 +35,7 @@ fun CustomContainerCompose(
     secondChild: @Composable (() -> Unit)?,
     alphaAnimDurationMillis: Int = 2000,
     offsetAnimDurationMillis: Int = 5000,
+    delayBeforeSecondAnim: Long = 2000L,
 ) {
     val density = LocalDensity.current.density
 
@@ -65,14 +66,14 @@ fun CustomContainerCompose(
 
         // Second child animation
         launch {
-            delay(2000)
+            delay(delayBeforeSecondAnim)
             secondChildAlpha.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(alphaAnimDurationMillis)
             )
         }
         launch {
-            delay(2000)
+            delay(delayBeforeSecondAnim)
             secondChildOffsetY.animateTo(
                 targetValue = parentHeight / 2f - secondChildHeight / 2,
                 animationSpec = tween(offsetAnimDurationMillis),
