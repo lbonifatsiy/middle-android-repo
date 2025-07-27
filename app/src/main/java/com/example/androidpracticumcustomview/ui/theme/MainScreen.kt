@@ -22,10 +22,10 @@ fun MainScreen(closeActivity: () -> Unit) {
         ) {
             CustomContainerCompose(
                 firstChild = {
-                    Text(1.toString())
+                    Text("1")
                 },
                 secondChild = {
-                    Text(2.toString())
+                    Text("2")
                 }
             )
         }

@@ -1,10 +1,14 @@
 package com.example.androidpracticumcustomview.ui.theme
 
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.AnimationSet
+import android.view.animation.TranslateAnimation
 
 /**
  * Задание:
@@ -53,12 +57,10 @@ class CustomContainer @JvmOverloads constructor(
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        if (childCount > 2) {
-            throw IllegalStateException(EXCEPTION_MESSAGE)
-        }
 
         val parentWidth = right - left
         val parentHeight = bottom - top
+        val parentCenterX = parentWidth / 2f
         val parentCenterY = parentHeight / 2f
 
         // First child
@@ -74,7 +76,7 @@ class CustomContainer @JvmOverloads constructor(
                 firstChild.layout(left, top, left + childWidth, top + childHeight)
 
                 if (firstChild.tag != TAG_VALUE) {
-                    firstChild.animateChildFromCenter(parentCenterY)
+                    firstChild.animateChildFromCenter(parentCenterX, parentCenterY)
                     firstChild.tag = TAG_VALUE
                 }
             }
@@ -93,7 +95,7 @@ class CustomContainer @JvmOverloads constructor(
                 secondChild.layout(left, top, left + childWidth, top + childHeight)
 
                 if (secondChild.tag != TAG_VALUE) {
-                    secondChild.animateChildFromCenter(parentCenterY)
+                    secondChild.animateChildFromCenter(parentCenterX, parentCenterY)
                     secondChild.tag = TAG_VALUE
                 }
             }
@@ -120,7 +122,8 @@ class CustomContainer @JvmOverloads constructor(
         super.addView(child)
     }
 
-    private fun View.animateChildFromCenter(startY: Float) {
+    private fun View.animateChildFromCenter(startX: Float, startY: Float) {
+        translationX = startX - width / 2f - left
         translationY = startY - height / 2f - top
         alpha = 0f
 
@@ -128,8 +131,9 @@ class CustomContainer @JvmOverloads constructor(
             .apply { duration = TRANSLATION_ANIM_DURATION_MILLIS }
         val animAlpha = ObjectAnimator.ofFloat(this, "alpha", 1f)
             .apply { duration = ALPHA_ANIM_DURATION_MILLIS }
-        animY.start()
-        animAlpha.start()
+        val animSet = AnimatorSet()
+            .apply { playTogether(animY, animAlpha) }
+        animSet.start()
     }
 
     private companion object {

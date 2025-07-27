@@ -30,10 +30,10 @@ class XmlActivity : ComponentActivity() {
         }
 
         val firstView = TextView(this).apply {
-            text = 1.toString()
+            text = "1"
         }
         val secondView = TextView(this).apply {
-            text = 2.toString()
+            text = "2"
         }
 
         customContainer.addView(firstView)
