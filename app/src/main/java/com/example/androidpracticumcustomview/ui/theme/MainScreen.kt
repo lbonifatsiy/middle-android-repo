@@ -5,34 +5,27 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
-/*
-Задание:
-Реализуйте необходимые компоненты.
-*/
 
 @Composable
 fun MainScreen(closeActivity: () -> Unit) {
     Scaffold { paddingValues ->
         Box(
             modifier = Modifier
+                .clickable { closeActivity.invoke() }
                 .fillMaxSize()
-                .padding(paddingValues)
-                .clickable { closeActivity.invoke() },
+                .padding(paddingValues),
             contentAlignment = Alignment.Center
         ) {
-
             CustomContainerCompose(
                 firstChild = {
-                    // TODO
-                    // ...
+                    Text("1")
                 },
                 secondChild = {
-                    // TODO
-                    // ...
+                    Text("2")
                 }
             )
         }
